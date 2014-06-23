@@ -2,42 +2,67 @@
  * Module dependencies.
  */
 
-var rest_root = __dirname,
-    express = require("express"),
+var express = require("express"),
     path = require("path"),
-    http = require('http');
+    http = require('http'),
+    restapi = require('recyclecalendarapi'),
+    app = express(),
+    port = process.env.PORT || 8080;
 
-//var express = require('express');
-//var http = require('http');
-//var path = require('path');
-//var logger = require('logger').getLogger('server', 'info');
-//var socketio = require('socket.io');
-//var restapi = require('pokerrestapi');
-
-var app = express();
+// http functions
+var sendErrorWithCode = function(res, httpStatusCode, err) {
+    var errorAsJSON = undefined;
+    res.statusCode = httpStatusCode;
+    if (err) {
+        errorAsJSON = {
+            "error": err
+        };
+    }
+    res.json(errorAsJSON);
+}
 
 // Config
-
-
-/* app.configure(function() {
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use(express.static(path.join(application_root, "public")));
-    app.use(express.errorHandler({
-        dumpExceptions: true,
-        showStack: true
-    }));
-}); */
+app.set('Content-Type', 'application/json');
 
 // Routes
+app.get('/api/helloAPI', function(req, res) {
+    restapi.helloAPI(function(jsonObject, err) {
+        if (err) {
+            sendErrorWithCode(res, 500, err);
+        } else {
+            res.json(jsonObject);
+        }
+    })
+});
 
-app.get('/api', function(req, res) {
-    res.send('Ecomm API is running');
+app.get('/api/error', function(req, res) {
+    restapi.error(function(jsonObject, err) {
+        if (err) {
+            sendErrorWithCode(res, 500, err);
+        } else {
+            res.json(jsonObject);
+        }
+    })
+});
+
+app.get('/routes', function(req, res) {
+    var allRoutes = app._router.stack,
+        apiRoutes = [],
+        aRoute = {};
+    console.log(allRoutes.length);
+
+    for (var i = 0; i < allRoutes.length; i++) {
+        aRoute = allRoutes[i];
+        console.log("Route:" + aRoute);
+        if (aRoute.route) {
+            console.log("adding route");
+            apiRoutes.push(aRoute);
+        }
+    }
+    res.json(apiRoutes);
 });
 
 // Launch server 
-// var port = process.env.PORT || 8080;
-app.listen(8080, function() {
+app.listen(port, function() {
     console.log("Listening on " + port);
 });
