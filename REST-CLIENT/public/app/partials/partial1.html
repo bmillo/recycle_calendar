@@ -1,0 +1,16 @@
+<h3>Search for a city</h3>
+<input type="text" ng-model="searchFilter" ng-change="changeFilter()" placeholder="Search..." />
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="city in citiesList">
+            <td>
+                Name: {{city.name}}&nbsp;
+            </td>
+        </tr>
+    </tbody>
+</table>

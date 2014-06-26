@@ -15,4 +15,10 @@ describe("recyclecalendarapi", function() {
             done();
         });
     });
+    it("should respond with two cities", function(done) {
+        request("http://localhost:8080/api/cities", function(error, response, body) {
+            expect(body).toEqual('[{"name":"Zürich"},{"name":"Basel"}]');
+            done();
+        });
+    });
 });

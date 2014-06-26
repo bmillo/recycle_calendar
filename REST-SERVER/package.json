@@ -6,7 +6,8 @@
         "start": "node app.js"
     },
     "bundleDependencies": [
-        "recyclecalendarapi"
+        "recyclecalendarapi",
+        "recyclecalendarpersistence"
     ],
     "dependencies": {
         "express": "4.4.x"
